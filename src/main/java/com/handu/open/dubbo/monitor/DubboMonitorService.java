@@ -51,7 +51,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * @author Jinkai.Ma
  */
-@Service(delay = -1)
+@Service(timeout = 3000)
 public class DubboMonitorService implements MonitorService {
 
     private static final Logger logger = LoggerFactory.getLogger(DubboMonitorService.class);
@@ -159,12 +159,10 @@ public class DubboMonitorService implements MonitorService {
         }
     }
 
+    @Override
     public void collect(URL statistics) {
         queue.offer(statistics);
-        if (logger.isInfoEnabled()) {
-            logger.info("collect statistics: " + statistics);
-        }
-
+        logger.info("collect statistics: " + statistics);
     }
 
     public List<URL> lookup(URL query) {

@@ -53,12 +53,13 @@ public class MongoConfig extends AbstractMongoConfiguration {
     private static final String DB_USERNAME = "db.username";
     private static final String DB_DATABASE = "db.database";
     private static final String DB_PASSWORD = "db.password";
+    private String authDatabase;
 
     private List<Converter<?, ?>> converters = Lists.newArrayList();
 
     @Override
     protected String getDatabaseName() {
-        return "dubbo_monitor";
+        return authDatabase;
     }
 
 
@@ -70,7 +71,7 @@ public class MongoConfig extends AbstractMongoConfiguration {
         final String username = env.getProperty(DB_USERNAME);
         final String database = env.getProperty(DB_DATABASE);
         final String password = env.getProperty(DB_PASSWORD);
-
+        authDatabase = database;
         return new MongoClient(singletonList(new ServerAddress(url, port)),
                 singletonList(MongoCredential.createCredential(username, database, password.toCharArray())));
     }

@@ -65,7 +65,9 @@ public class DubboConfig {
     @Bean
     public ProtocolConfig protocolConfig() {
         ProtocolConfig protocolConfig = new ProtocolConfig("dubbo");
-        protocolConfig.setPort(Integer.parseInt(env.getProperty(PROTOCOL_PORT, "20880")));
+        protocolConfig.setPort(Integer.parseInt(env.getProperty(PROTOCOL_PORT, "7070")));
+//        protocolConfig.setSerialization("kryo");
+//        protocolConfig.setOptimizer("com.handu.open.dubbo.monitor.domain.SerializationOptimizerImpl");
         return protocolConfig;
     }
 }
