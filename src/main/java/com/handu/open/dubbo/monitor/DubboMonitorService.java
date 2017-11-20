@@ -64,20 +64,15 @@ public class DubboMonitorService implements MonitorService {
 
     private volatile boolean running = true;
 
-    private Thread writeThread;
-
     private BlockingQueue<URL> queue;
-
-    @Autowired
-    private RegistryContainer registryContainer;
 
     @Autowired
     private MongoTemplate mongoTemplate;
 
     @PostConstruct
     private void init() {
-        queue = new LinkedBlockingQueue<URL>(Integer.parseInt(ConfigUtils.getProperty("dubbo.monitor.queue", "100000")));
-        writeThread = new Thread(new Runnable() {
+        queue = new LinkedBlockingQueue<>(Integer.parseInt(ConfigUtils.getProperty("dubbo.monitor.queue", "100000")));
+        Thread writeThread = new Thread(new Runnable() {
             public void run() {
                 while (running) {
                     try {
@@ -166,7 +161,6 @@ public class DubboMonitorService implements MonitorService {
     }
 
     public List<URL> lookup(URL query) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -273,8 +267,7 @@ public class DubboMonitorService implements MonitorService {
                 return (int) (arg1.getSuccess() - arg0.getSuccess());
             }
         });
-        successList.subList(0, successList.size() > 19 ? 19 : successList.size());
-        result.put("success", successList);
+        result.put("success", successList.subList(0, successList.size() > 19 ? 19 : successList.size()));
 
         List<DubboInvoke> failureList = Lists.newArrayList();
         GroupByResults<DubboInvoke> failureResults = mongoTemplate.group(criteris, "dubboInvoke",
@@ -289,8 +282,7 @@ public class DubboMonitorService implements MonitorService {
                 return (int) (arg1.getFailure() - arg0.getFailure());
             }
         });
-        failureList.subList(0, failureList.size() > 19 ? 19 : failureList.size());
-        result.put("failure", failureList);
+        result.put("failure", failureList.subList(0, failureList.size() > 19 ? 19 : failureList.size()));
         return result;
     }
 }
